@@ -1,21 +1,24 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
 from .models import Super
 from .serializer import SuperSerializer
 
 
 @api_view(['GET'])
 def super_list(request):
-    supers = Super.objects.all()
-    serializer = SuperSerializer(supers, many=True)
+
+    if request.method == 'GET':
+        supers = Super.objects.all()
+        serializer = SuperSerializer(supers, many=True)
+        return Response (serializer.data, status = status.HTTP_200_OK)
 
 
-
-    return Response (serializer.data)
-
-
-
-
+# @api_view(['GET'])
+# def super_typerequest):
+#     supers = Super.objects.all()
+#     serializer = SuperSerializer(supers, many=True)
+#     return Response (serializer.data)
 
 # from django.shortcuts import get_object_or_404
 # from rest_framework.decorators import api_view

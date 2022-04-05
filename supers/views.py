@@ -4,6 +4,7 @@ from rest_framework import status
 from super_types.models import SuperType
 from .models import Super
 from .serializer import SuperSerializer
+from django.shortcuts import get_object_or_404
 
 
 
@@ -13,6 +14,7 @@ def super_list(request):
     if request.method == 'GET':
         villians_heroes = SuperType.objects.all()
         custom_response_dictionary = {}
+        
         for super_type in villians_heroes:
             heroes_villians = Super.objects.filter(super_type_id = super_type.id)
             supers_serializer = SuperSerializer(heroes_villians, many=True)
@@ -30,26 +32,15 @@ def super_list(request):
 
 @api_view(['GET','PUT', 'DELETE'])
 def villians_heroes_by_id(request, pk):
-    try:
-        super = Super.objects.get(pk=pk)
-        serializer = SuperSerializer(super)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    except Super.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-    
-    return Response(pk)
-
-    #  car = get_object_or_404(Car, pk=pk)
-    #  if request.method == 'GET': 
-    #     serializers = CarSerializer(car);
-    #     return Response(serializers.data)
-    #  elif request.method == 'PUT':
-    #     serializers = CarSerializer(car, data = request.data)
-    #     serializers.is_valid(raise_exception=True)
-    #     serializers.save()
-    #     return Response(serializers.data)
-    #  elif request.method == "DELETE":
-    #      car.delete()
-    #      return Response(status = status.HTTP_204_NO_CONTENT)
+        super = get_object_or_404(Super,pk=pk)
+        if request.method == 'GET':
+            serializer = SuperSerializer(super)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        elif request.method == 'PUT':
+            serializers = SuperSerializer(super, data = request.data)
+            serializers.is_valid(raise_exception=True)
+            serializers.save()
+            return Response(serializers.data)
+        elif request.method == "DELETE":
+            super.delete()
+            return Response(status = status.HTTP_204_NO_CONTENT)

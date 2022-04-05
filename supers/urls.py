@@ -3,5 +3,6 @@ from . import views
 
 urlpatterns = [
     path('', views.super_list),
+    path('<int:pk>/', views.villians_heroes_by_id),
 ]
 

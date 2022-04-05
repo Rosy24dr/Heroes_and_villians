@@ -28,4 +28,28 @@ def super_list(request):
             return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET','PUT', 'DELETE'])
+def villians_heroes_by_id(request, pk):
+    try:
+        super = Super.objects.get(pk=pk)
+        serializer = SuperSerializer(super)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Super.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
+
+    
+    return Response(pk)
+
+    #  car = get_object_or_404(Car, pk=pk)
+    #  if request.method == 'GET': 
+    #     serializers = CarSerializer(car);
+    #     return Response(serializers.data)
+    #  elif request.method == 'PUT':
+    #     serializers = CarSerializer(car, data = request.data)
+    #     serializers.is_valid(raise_exception=True)
+    #     serializers.save()
+    #     return Response(serializers.data)
+    #  elif request.method == "DELETE":
+    #      car.delete()
+    #      return Response(status = status.HTTP_204_NO_CONTENT)

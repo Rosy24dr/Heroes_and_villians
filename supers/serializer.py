@@ -11,3 +11,10 @@ class SuperSerializer(serializers.ModelSerializer):
         depth = 1
     
     super_type_id = serializers.IntegerField(write_only=True)
+
+
+class PowerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Super
+        fields = ['id', 'name']
+        

@@ -12,13 +12,18 @@ from django.shortcuts import get_object_or_404
 def super_list(request):
 
     if request.method == 'GET':
-        villians_heroes = SuperType.objects.all()
+        villains_heroes = SuperType.objects.all()
         custom_response_dictionary = {}
+        heroes_and_villains = request.query_params.get('type')
+        if heroes_and_villains:
+                the_super = Super.objects.filter(super_type__super_type=heroes_and_villains)
+                supers_serializer = SuperSerializer(the_super, many=True) 
+                return Response(supers_serializer.data)
         
-        for super_type in villians_heroes:
-            heroes_villians = Super.objects.filter(super_type_id = super_type.id)
-            supers_serializer = SuperSerializer(heroes_villians, many=True)
-            custom_response_dictionary[super_type.super_type] = supers_serializer.data
+        for super in villains_heroes:
+            heroes_villains = Super.objects.filter(super_type_id = super.id)
+            supers_serializer = SuperSerializer(heroes_villains, many=True)
+            custom_response_dictionary[super.super_type] = supers_serializer.data
         return Response (custom_response_dictionary)
 
     elif request.method == 'POST':
@@ -31,7 +36,7 @@ def super_list(request):
 
 
 @api_view(['GET','PUT', 'DELETE'])
-def villians_heroes_by_id(request, pk):
+def villains_heroes_by_id(request, pk):
         super = get_object_or_404(Super,pk=pk)
         if request.method == 'GET':
             serializer = SuperSerializer(super)
